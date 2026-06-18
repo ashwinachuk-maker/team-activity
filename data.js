@@ -1,0 +1,77 @@
+// Team roster — sourced from team-roster/roster.xlsx
+const TEAM = [
+  'Aman', 'Niharika', 'Mohana', 'Srinivasulu', 'Sharath',
+  'Vishnu', 'Yamini', 'Sai Krishna', 'Soonk', 'Ashwin',
+  'Abhay', 'Dhruv', 'Manikanta', 'Vinutha', 'Ananya',
+  'Palla', 'Tulasi', 'Ranjeet', 'Joseph', 'Akash',
+  'Robert', 'Naveen', 'Samuel', 'Bhavana', 'Jui',
+  'Shubham', 'Kunal', 'Laurel', 'Sudharshan', 'Heera',
+  'Chethna', 'Amogh', 'Manik', 'Praneeth', 'Hemalatha',
+  'Maria', 'Aishwariya', 'Aditya',
+];
+
+const TRIVIA = [
+  {
+    id: 1,
+    emoji: '🏆',
+    question: 'Who has a Guinness World Record?',
+    answer: 'Ashwin',
+  },
+  {
+    id: 2,
+    emoji: '🌍',
+    question: 'Who has lived in the most countries?',
+    answer: 'Heera',
+  },
+  {
+    id: 3,
+    emoji: '☕',
+    question: 'Who drinks the most coffee in the office?',
+    answer: 'Soonk',
+  },
+  {
+    id: 4,
+    emoji: '💼',
+    question: 'Who has the most LinkedIn connections?',
+    answer: 'Ashwin',
+  },
+  {
+    id: 5,
+    emoji: '🚗',
+    question: 'Who learned to drive most recently?',
+    answer: 'Niharika',
+  },
+];
+
+const AWARDS = [
+  {
+    id: 1,
+    emoji: '🎉',
+    category: 'Most Party Animal',
+    question: 'Who is the biggest party animal on the team?',
+  },
+  {
+    id: 2,
+    emoji: '🧟',
+    category: 'Zombie Apocalypse Survivor',
+    question: 'Who would survive a zombie apocalypse?',
+  },
+  {
+    id: 3,
+    emoji: '🔍',
+    category: 'Human Google Search',
+    question: 'Who is the team\'s human Google?',
+  },
+  {
+    id: 4,
+    emoji: '🍜',
+    category: 'Secret Foodie',
+    question: 'Who is the team\'s secret foodie?',
+  },
+  {
+    id: 5,
+    emoji: '😴',
+    category: 'Most Likely to Nap',
+    question: 'Who would fall asleep in a meeting?',
+  },
+];

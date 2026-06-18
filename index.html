@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Team Arena 🏆</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== SCREEN: NAME ENTRY ===== -->
+  <div id="screen-name" class="screen active">
+    <div class="screen-content centered">
+      <div class="logo-area">
+        <span class="logo-icon">🏆</span>
+        <h1 class="game-title">Team <span>Arena</span></h1>
+        <p class="game-sub">The Ultimate Team Building Experience</p>
+      </div>
+      <div class="entry-card">
+        <h2>What's your name, champion?</h2>
+        <p class="hint">Enter your name to join the game</p>
+        <input
+          type="text"
+          id="name-input"
+          placeholder="Your name..."
+          maxlength="20"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="btn-enter" class="btn btn-primary btn-wide" disabled>
+          Enter the Arena →
+        </button>
+      </div>
+      <p id="players-joined" class="players-joined"></p>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: TRIVIA ===== -->
+  <div id="screen-trivia" class="screen">
+    <header class="game-header">
+      <div class="header-row">
+        <span class="game-tag">🧠 Trivia</span>
+        <span class="header-counter" id="trivia-counter">Q1 / 5</span>
+        <span class="player-chip" id="trivia-player-chip"></span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="trivia-progress-fill"></div>
+      </div>
+    </header>
+    <div class="screen-content">
+      <div class="q-card">
+        <span class="q-emoji" id="trivia-emoji">🤔</span>
+        <p class="q-label" id="trivia-q-label">Question 1</p>
+        <h2 class="q-text" id="trivia-q-text"></h2>
+      </div>
+      <div class="answer-grid" id="trivia-answer-grid"></div>
+      <div class="trivia-actions">
+        <button id="btn-trivia-back" class="btn btn-outline" disabled>← Back</button>
+        <button id="btn-trivia-next" class="btn btn-primary" disabled>Submit →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: TRIVIA RESULTS ===== -->
+  <div id="screen-trivia-result" class="screen">
+    <div class="screen-content centered">
+      <div id="trivia-result-inner" class="result-inner"></div>
+      <button id="btn-to-awards" class="btn btn-primary btn-wide">
+        Next: Team Awards 🏅
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: VOTING / AWARDS ===== -->
+  <div id="screen-voting" class="screen">
+    <header class="game-header">
+      <div class="header-row">
+        <span class="game-tag">🏅 Awards</span>
+        <span class="header-counter" id="voting-counter">1 / 5</span>
+        <span class="player-chip" id="voting-player-chip"></span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="voting-progress-fill"></div>
+      </div>
+    </header>
+    <div class="screen-content">
+      <div class="award-card">
+        <span class="award-emoji" id="award-emoji">🎉</span>
+        <p class="award-cat-label" id="award-cat-label">AWARD CATEGORY</p>
+        <h2 class="q-text" id="voting-q-text"></h2>
+      </div>
+      <div class="name-search-wrap">
+        <span class="name-search-icon">🔍</span>
+        <input type="text" id="name-search" placeholder="Search name..." autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="names-grid" id="voting-names-grid"></div>
+      <div id="reason-area" class="reason-area hidden">
+        <p class="reason-label">✍️ Tell us why you chose them:</p>
+        <textarea
+          id="reason-input"
+          placeholder="Write your reason here..."
+          maxlength="200"
+          rows="3"
+        ></textarea>
+        <button id="btn-vote" class="btn btn-primary btn-wide" disabled>
+          Cast Vote →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: ALL DONE (player view) ===== -->
+  <div id="screen-done" class="screen">
+    <div class="screen-content centered">
+      <div class="done-area">
+        <span class="done-icon">🎉</span>
+        <h2 class="done-title">That's a wrap!</h2>
+        <p class="done-sub">Your votes are in. Stay tuned for the big reveal!</p>
+      </div>
+      <div class="admin-gate">
+        <button id="btn-show-admin" class="btn btn-outline btn-sm">
+          🔐 I'm the admin
+        </button>
+        <div id="admin-auth" class="admin-auth hidden">
+          <input
+            type="password"
+            id="admin-pw-input"
+            placeholder="Enter password..."
+            autocomplete="off"
+          />
+          <button id="btn-admin-submit" class="btn btn-primary btn-wide">
+            Unlock Results →
+          </button>
+          <p id="admin-pw-error" class="admin-error hidden">Wrong password. Try again.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: TRIVIA LEADERBOARD (admin only) ===== -->
+  <div id="screen-leaderboard" class="screen">
+    <div class="screen-content centered">
+      <div class="lb-hero">
+        <span class="lb-icon">🧠</span>
+        <h2 class="lb-title">Trivia Champions</h2>
+        <p class="lb-sub">Who knows the team best?</p>
+      </div>
+      <div id="lb-rows" class="lb-rows"></div>
+      <button id="btn-lb-next" class="btn btn-primary btn-wide">
+        Next: Award Ceremony 🏆
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: AWARD RESULTS (admin only) ===== -->
+  <div id="screen-results" class="screen">
+    <div class="results-header">
+      <h2 class="results-title">🏆 Award Ceremony</h2>
+      <p class="results-sub">Tap each note to reveal the winner!</p>
+    </div>
+    <div id="awards-list" class="awards-list"></div>
+    <div class="results-footer">
+      <button id="btn-replay" class="btn btn-outline">Reset Game 🗑️</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: WHO PICKED ME (reasons) ===== -->
+  <div id="screen-reasons" class="screen">
+    <header class="reasons-header">
+      <button id="btn-reasons-back" class="btn btn-outline btn-sm">← Back</button>
+      <div class="reasons-header-info">
+        <span class="reasons-award-label" id="reasons-award-label"></span>
+        <span class="reasons-winner-name" id="reasons-winner-name"></span>
+      </div>
+    </header>
+    <div class="screen-content">
+      <p class="reasons-intro" id="reasons-intro"></p>
+      <div id="reasons-cards-grid" class="reasons-cards-grid"></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
