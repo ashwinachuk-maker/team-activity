@@ -34,12 +34,13 @@ function saveLocalEntry(entry) {
 async function loadEntries() {
   if (window.db) {
     try {
-      const snap = await window.db.ref('entries').once('value');
+      const deadline = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+      const snap = await Promise.race([window.db.ref('entries').once('value'), deadline]);
       const val  = snap.val();
       if (val) return Object.values(val);
       return [];
     } catch (e) {
-      console.warn('Firebase read failed, using localStorage:', e);
+      console.warn('Firebase read failed, using localStorage:', e.message);
     }
   }
   return loadLocalEntries();
@@ -187,7 +188,7 @@ function submitTrivia() {
 
   // immediately advance
   if (currentQ >= TRIVIA.length - 1) {
-    showTriviaResult();
+    startVoting();
   } else {
     state.trivia.currentQ++;
     renderTrivia();

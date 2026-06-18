@@ -310,7 +310,6 @@ html, body {
   opacity: 0.55;
   cursor: default;
 }
-.answer-btn:nth-child(5) { grid-column: 1 / -1; }
 
 .answer-num {
   width: 28px;
