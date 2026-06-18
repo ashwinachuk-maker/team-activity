@@ -325,6 +325,7 @@ function castVote() {
 
 async function finishVoting() {
   showScreen('screen-done');
+  startGameStateListener();
   await saveEntry({
     playerName:  state.playerName,
     triviaScore: state.trivia.score,
@@ -350,6 +351,7 @@ document.getElementById('btn-admin-submit').addEventListener('click', async () =
   const err = document.getElementById('admin-pw-error');
   if (val === ADMIN_PASSWORD) {
     err.classList.add('hidden');
+    stopGameStateListener();
     await showLeaderboard();
   } else {
     err.classList.remove('hidden');
@@ -396,9 +398,9 @@ document.getElementById('btn-lb-next').addEventListener('click', showResults);
 // ─── RESULTS ─────────────────────────────────────────────────────────────────
 async function buildTally() {
   const entries = await loadEntries();
-  // tally[awardId] = { winner, winnerVotes, allVotes: [{nominee, reason, voter}] }
   const tally = {};
-  AWARDS.forEach(award => {
+
+  for (const award of AWARDS) {
     const votes = [];
     const counts = {};
     entries.forEach(entry => {
@@ -408,15 +410,31 @@ async function buildTally() {
         counts[v.nominee] = (counts[v.nominee] || 0) + 1;
       }
     });
-    let winner = null, maxV = 0;
-    Object.entries(counts).forEach(([name, n]) => { if (n > maxV) { winner = name; maxV = n; } });
-    // fallback: use last player's vote if no entries yet
-    if (!winner && state.voting.votes.length) {
-      const myVote = state.voting.votes.find(v => v.catId === award.id);
-      if (myVote) { winner = myVote.nominee; votes.push({ nominee: myVote.nominee, reason: myVote.reason, voter: state.playerName }); maxV = 1; }
+
+    const maxV = Object.values(counts).length ? Math.max(...Object.values(counts)) : 0;
+    const topNames = Object.entries(counts).filter(([, c]) => c === maxV).map(([n]) => n);
+    let isTie = topNames.length > 1 && maxV > 0;
+    let winner = isTie ? null : (topNames[0] || null);
+    let tiedNames = isTie ? topNames : [];
+
+    // Check tiebreaker votes if there was a tie
+    if (isTie && window.db) {
+      try {
+        const deadline = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+        const tbSnap = await Promise.race([window.db.ref('tiebreaker/' + award.id).once('value'), deadline]);
+        const tbVal = tbSnap.val();
+        if (tbVal) {
+          const tbCounts = {};
+          Object.values(tbVal).forEach(v => { tbCounts[v.nominee] = (tbCounts[v.nominee] || 0) + 1; });
+          const tbMax = Math.max(...Object.values(tbCounts));
+          const tbTop = Object.entries(tbCounts).filter(([, c]) => c === tbMax).map(([n]) => n);
+          if (tbTop.length === 1) { winner = tbTop[0]; isTie = false; tiedNames = []; }
+        }
+      } catch (e) { /* keep tie state */ }
     }
-    tally[award.id] = { winner, winnerVotes: maxV, allVotes: votes };
-  });
+
+    tally[award.id] = { winner, tiedNames, winnerVotes: maxV, allVotes: votes, isTie };
+  }
   return tally;
 }
 
@@ -427,7 +445,7 @@ async function showResults() {
   list.innerHTML = '';
 
   AWARDS.forEach((award, i) => {
-    const { winner, winnerVotes } = tally[award.id];
+    const { winner, tiedNames, winnerVotes, isTie } = tally[award.id];
     const label = winnerVotes === 1 ? '1 vote' : `${winnerVotes} votes`;
 
     const wrap = document.createElement('div');
@@ -435,6 +453,25 @@ async function showResults() {
     wrap.style.animationDelay = `${i * 0.08}s`;
     wrap.dataset.state = '0';
     wrap.dataset.awardId = award.id;
+
+    const winnerFace = isTie ? `
+      <div class="sticky-face face-winner face-tie">
+        <span class="fw-award-tag">${award.category}</span>
+        <span class="fw-crown">🤝</span>
+        <span class="fw-tie-label">It's a Tie!</span>
+        <span class="fw-tied-names">${tiedNames.join(' vs ')}</span>
+        <button class="btn-tiebreaker" data-award-id="${award.id}">🗳️ Run Tiebreaker</button>
+      </div>
+    ` : `
+      <div class="sticky-face face-winner">
+        <span class="fw-award-tag">${award.category}</span>
+        <span class="fw-crown">👑</span>
+        <span class="fw-name">${winner || '???'}</span>
+        <span style="font-size:12px;opacity:0.5;">${label}</span>
+        <button class="btn-who-picked" data-award-id="${award.id}">💬 What people said</button>
+      </div>
+    `;
+
     wrap.innerHTML = `
       <div class="sticky-note">
         <div class="sticky-face face-closed">
@@ -443,31 +480,103 @@ async function showResults() {
           <span class="fc-title">${award.category}</span>
           <span class="fc-hint">Tap to reveal winner</span>
         </div>
-        <div class="sticky-face face-winner">
-          <span class="fw-award-tag">${award.category}</span>
-          <span class="fw-crown">👑</span>
-          <span class="fw-name">${winner || '???'}</span>
-          <span style="font-size:12px;opacity:0.5;">${label}</span>
-          <button class="btn-who-picked" data-award-id="${award.id}">💬 What people said</button>
-        </div>
+        ${winnerFace}
       </div>
     `;
 
-    // flip on note click (but not on the button)
     wrap.querySelector('.sticky-note').addEventListener('click', e => {
-      if (e.target.closest('.btn-who-picked')) return;
+      if (e.target.closest('.btn-who-picked') || e.target.closest('.btn-tiebreaker')) return;
       if (wrap.dataset.state === '0') {
         wrap.dataset.state = '1';
         wrap.classList.add('state-1');
       }
     });
 
-    // "Who picked me?" button
-    wrap.querySelector('.btn-who-picked').addEventListener('click', () => {
-      showReasons(award, tally[award.id]);
-    });
+    if (isTie) {
+      wrap.querySelector('.btn-tiebreaker').addEventListener('click', () => {
+        startTiebreaker(award, tiedNames);
+      });
+    } else {
+      wrap.querySelector('.btn-who-picked').addEventListener('click', () => {
+        showReasons(award, tally[award.id]);
+      });
+    }
 
     list.appendChild(wrap);
+  });
+}
+
+// ─── TIEBREAKER (admin side) ──────────────────────────────────────────────────
+async function startTiebreaker(award, tiedNames) {
+  if (window.db) {
+    await window.db.ref('gameState').set({
+      phase: 'tiebreaker',
+      awardId: award.id,
+      nominees: tiedNames,
+      question: award.question,
+      emoji: award.emoji,
+      category: award.category,
+    });
+  }
+  showScreen('screen-admin-tiebreaker');
+  document.getElementById('atb-award').textContent = award.category.toUpperCase();
+  const namesEl = document.getElementById('atb-names');
+  namesEl.innerHTML = tiedNames.map(n => `<span class="atb-name-chip">${n}</span>`).join('');
+}
+
+document.getElementById('btn-close-voting').addEventListener('click', async () => {
+  if (window.db) await window.db.ref('gameState').set({ phase: 'idle' });
+  await showResults();
+});
+
+// ─── TIEBREAKER (participant side) ───────────────────────────────────────────
+let _gameStateRef = null;
+
+function startGameStateListener() {
+  if (!window.db || _gameStateRef) return;
+  _gameStateRef = window.db.ref('gameState');
+  _gameStateRef.on('value', snap => {
+    const gs = snap.val();
+    const activeScreen = document.querySelector('.screen.active')?.id;
+    if (!gs || gs.phase === 'idle') {
+      if (activeScreen === 'screen-tiebreaker') showScreen('screen-done');
+      return;
+    }
+    if (gs.phase === 'tiebreaker' && (activeScreen === 'screen-done' || activeScreen === 'screen-tiebreaker')) {
+      showTiebreakerScreen(gs);
+    }
+  });
+}
+
+function stopGameStateListener() {
+  if (_gameStateRef) { _gameStateRef.off(); _gameStateRef = null; }
+}
+
+function showTiebreakerScreen(gs) {
+  showScreen('screen-tiebreaker');
+  document.getElementById('tb-title').textContent = gs.question;
+  const grid = document.getElementById('tb-nominees-grid');
+  grid.innerHTML = '';
+  const votedMsg = document.getElementById('tb-voted-msg');
+  votedMsg.classList.add('hidden');
+
+  gs.nominees.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'tb-nominee-btn';
+    btn.innerHTML = `<div class="name-avatar tb-avatar">${name[0]}</div><span class="tb-nominee-name">${escapeHtml(name)}</span>`;
+    btn.addEventListener('click', async () => {
+      if (votedMsg.classList.contains('hidden') === false) return;
+      grid.querySelectorAll('.tb-nominee-btn').forEach(b => { b.disabled = true; b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      if (window.db && state.playerName) {
+        const key = state.playerName.replace(/[.#$[\]/]/g, '_');
+        await window.db.ref('tiebreaker/' + gs.awardId + '/' + key).set({
+          nominee: name, voter: state.playerName,
+        });
+      }
+      votedMsg.classList.remove('hidden');
+    });
+    grid.appendChild(btn);
   });
 }
 

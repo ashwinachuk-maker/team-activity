@@ -778,6 +778,66 @@ html, body {
 }
 .admin-error.hidden { display: none; }
 
+/* ───── TIEBREAKER (participant) ───── */
+.tb-hero { text-align: center; margin-bottom: 20px; }
+.tb-icon { font-size: 64px; display: block; margin-bottom: 8px; animation: float 3s ease-in-out infinite; }
+.tb-round-label {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--pink); margin-bottom: 6px;
+}
+.tb-title {
+  font-family: 'Fredoka One', sans-serif; font-size: 26px;
+  color: var(--white); line-height: 1.3;
+}
+.tb-hint { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 20px; }
+.tb-nominees-grid {
+  display: flex; flex-direction: column; gap: 12px; width: 100%; margin-bottom: 20px;
+}
+.tb-nominee-btn {
+  background: var(--bg-card);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: var(--r);
+  padding: 16px 20px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  transition: all 0.2s; -webkit-tap-highlight-color: transparent;
+}
+.tb-nominee-btn:hover:not(:disabled) { border-color: var(--pink); background: rgba(255,107,157,0.08); }
+.tb-nominee-btn.selected { border-color: var(--pink); background: rgba(255,107,157,0.18); }
+.tb-nominee-btn:disabled { opacity: 0.5; cursor: default; }
+.tb-avatar { width: 36px !important; height: 36px !important; font-size: 14px !important; flex-shrink: 0; }
+.tb-nominee-name { font-size: 18px; font-weight: 900; color: var(--white); }
+.tb-voted-msg {
+  font-size: 15px; font-weight: 700; color: var(--green);
+  text-align: center; padding: 12px; animation: fadeUp 0.3s ease;
+}
+.tb-voted-msg.hidden { display: none; }
+
+/* ───── TIEBREAKER (admin control) ───── */
+.atb-icon { font-size: 72px; display: block; margin-bottom: 12px; animation: float 3s ease-in-out infinite; }
+.atb-title { font-family: 'Fredoka One', sans-serif; font-size: 34px; color: var(--white); margin-bottom: 6px; }
+.atb-award { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); margin-bottom: 20px; }
+.atb-names { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 24px; }
+.atb-name-chip {
+  background: rgba(255,107,157,0.15); border: 1.5px solid var(--pink);
+  color: var(--white); padding: 8px 20px; border-radius: 20px;
+  font-size: 18px; font-weight: 900;
+}
+.atb-hint { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+
+/* ───── TIE STATE on sticky note ───── */
+.face-tie { background: linear-gradient(145deg, #e8e8ff, #d0d0ff) !important; color: #1a1a3f !important; }
+.fw-tie-label { font-family: 'Fredoka One', sans-serif; font-size: 26px; line-height: 1; }
+.fw-tied-names { font-size: 13px; font-weight: 800; opacity: 0.7; text-align: center; }
+.btn-tiebreaker {
+  margin-top: 6px; background: rgba(0,0,0,0.15); color: #1a1a3f;
+  border: 1.5px solid rgba(0,0,0,0.2); padding: 7px 16px;
+  border-radius: 20px; font-size: 13px; font-weight: 800;
+  cursor: pointer; font-family: 'Nunito', sans-serif; transition: background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-tiebreaker:hover { background: rgba(0,0,0,0.25); }
+
 /* ───── REASONS SCREEN ───── */
 .reasons-header {
   display: flex;

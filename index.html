@@ -167,6 +167,32 @@
     </div>
   </div>
 
+  <!-- ===== SCREEN: TIEBREAKER (participant view) ===== -->
+  <div id="screen-tiebreaker" class="screen">
+    <div class="screen-content centered">
+      <div class="tb-hero">
+        <span class="tb-icon">🤝</span>
+        <p class="tb-round-label">TIEBREAKER ROUND</p>
+        <h2 class="tb-title" id="tb-title"></h2>
+      </div>
+      <p class="tb-hint">It's a tie! Cast your vote to break it.</p>
+      <div id="tb-nominees-grid" class="tb-nominees-grid"></div>
+      <p id="tb-voted-msg" class="tb-voted-msg hidden">✅ Vote cast! Waiting for results…</p>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: ADMIN TIEBREAKER CONTROL ===== -->
+  <div id="screen-admin-tiebreaker" class="screen">
+    <div class="screen-content centered">
+      <span class="atb-icon">🗳️</span>
+      <h2 class="atb-title">Tiebreaker in Progress</h2>
+      <p class="atb-award" id="atb-award"></p>
+      <div id="atb-names" class="atb-names"></div>
+      <p class="atb-hint">Participants are voting now…</p>
+      <button id="btn-close-voting" class="btn btn-primary btn-wide">Close Voting 🔒</button>
+    </div>
+  </div>
+
   <!-- ===== SCREEN: WHO PICKED ME (reasons) ===== -->
   <div id="screen-reasons" class="screen">
     <header class="reasons-header">
