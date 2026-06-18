@@ -55,51 +55,21 @@ const TRIVIA = [
   },
   {
     id: 8,
-    emoji: '🎳',
-    question: 'Who was the ultimate bowling champion?',
-    answer: 'Sharath',
-  },
-  {
-    id: 9,
-    emoji: '⚓',
-    question: 'Who was a marine?',
-    answer: 'Robert',
-  },
-  {
-    id: 10,
-    emoji: '💻',
-    question: 'Who forgot their laptop over the weekend?',
-    answer: 'Amogh',
-  },
-  {
-    id: 11,
-    emoji: '🏃',
-    question: 'Who runs marathons?',
-    answer: 'Abhay',
-  },
-  {
-    id: 12,
-    emoji: '✈️',
-    question: 'Who is transferring to the Bangalore office soon?',
-    answer: 'Yamini',
-  },
-  {
-    id: 13,
-    emoji: '💍',
-    question: 'Who is getting married soon?',
-    answer: 'Aishwariya',
-  },
-  {
-    id: 14,
     emoji: '🎂',
     question: 'Who celebrated their birthday on 3 different continents?',
     answer: 'Lavanya',
   },
   {
-    id: 15,
-    emoji: '🏏',
-    question: 'Who is a state level cricket player?',
-    answer: 'Ashwin',
+    id: 9,
+    emoji: '🎳',
+    question: 'Who was the ultimate bowling champion?',
+    answer: 'Sharath',
+  },
+  {
+    id: 10,
+    emoji: '⚓',
+    question: 'Who was a marine?',
+    answer: 'Robert',
   },
 ];
 
