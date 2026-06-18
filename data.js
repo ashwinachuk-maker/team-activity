@@ -104,10 +104,4 @@ const AWARDS = [
     category: 'Heat Master',
     question: 'Who can handle the spiciest food?',
   },
-  {
-    id: 6,
-    emoji: '🏆',
-    category: 'Team Connoisseur',
-    question: 'Who knows the team inside and out?',
-  },
 ];
