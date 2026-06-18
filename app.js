@@ -147,8 +147,10 @@ function renderTrivia() {
     grid.appendChild(btn);
   });
 
-  // back button — disabled on Q1
-  document.getElementById('btn-trivia-back').disabled = currentQ === 0;
+  // back button — hidden on Q1
+  const btnBack = document.getElementById('btn-trivia-back');
+  btnBack.style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+  btnBack.disabled = currentQ === 0;
 
   // submit button — enabled if this question already has an answer
   const btnNext = document.getElementById('btn-trivia-next');
@@ -188,7 +190,7 @@ function submitTrivia() {
 
   // immediately advance
   if (currentQ >= TRIVIA.length - 1) {
-    startVoting();
+    showScreen('screen-break');
   } else {
     state.trivia.currentQ++;
     renderTrivia();
@@ -213,6 +215,7 @@ function showTriviaResult() {
 }
 
 document.getElementById('btn-to-awards').addEventListener('click', startVoting);
+document.getElementById('btn-break-continue').addEventListener('click', startVoting);
 
 // ─── VOTING / AWARDS ─────────────────────────────────────────────────────────
 function startVoting() {

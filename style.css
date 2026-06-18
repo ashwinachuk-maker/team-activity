@@ -514,6 +514,38 @@ html, body {
   color: var(--pink);
 }
 
+/* ───── BREAK SCREEN ───── */
+.break-area {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.break-icon {
+  font-size: 80px;
+  display: block;
+  margin-bottom: 12px;
+  animation: float 3s ease-in-out infinite;
+}
+.break-round-label {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+.break-title {
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 32px;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.break-sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 /* ───── TRIVIA LEADERBOARD ───── */
 .lb-hero {
   text-align: center;
