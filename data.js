@@ -7,7 +7,7 @@ const TEAM = [
   'Robert', 'Naveen', 'Samuel', 'Bhavana', 'Jui',
   'Shubham', 'Kunal', 'Laurel', 'Sudharshan', 'Heera',
   'Chethna', 'Amogh', 'Manik', 'Praneeth', 'Hemalatha',
-  'Maria', 'Aishwariya', 'Aditya',
+  'Maria', 'Aishwariya', 'Aditya', 'Lavanya',
 ];
 
 const TRIVIA = [
@@ -91,6 +91,12 @@ const TRIVIA = [
   },
   {
     id: 14,
+    emoji: '🎂',
+    question: 'Who celebrated their birthday on 3 different continents?',
+    answer: 'Lavanya',
+  },
+  {
+    id: 15,
     emoji: '🏏',
     question: 'Who is a state level cricket player?',
     answer: 'Ashwin',
